@@ -1,5 +1,4 @@
 import hevs.graphics.FunGraphics
-import math.round
 
 import java.awt.{Color, Rectangle}
 import java.awt.event.{KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
@@ -87,27 +86,21 @@ object Play extends App {
   }
 
   def Car(ID: Int, width: Int, height: Int, posX: Int, posY: Int): Unit = {
-    val posXInGraph: Int = posX * 100 +10
-    val posYInGraph: Int = posY * 100 +10
-
     //Voitures verticales en fonction de l'ID
     if (ID >= 2 && ID <= 50) {
       var nbCasesV: Int = (height + 20) / 100
       for (i <- 0 until nbCasesV) {
-        playground(posX + i)(posY) = ID
+        playground(posY+i)(posX) = ID
       }
-      //fg.drawFillRect(posXInGraph, posYInGraph, width, height)
     }
 
     //Voitures horizontales en fonction de l'ID
     else if (ID >= 51 && ID <= 100) {
       var nbCasesH: Int = (width + 20) / 100
       for (j <- 0 until nbCasesH) {
-        playground(posX)(posY + j) = ID
+        playground(posY)(posX + j) = ID
       }
-      //fg.drawFillRect(posXInGraph, posYInGraph, width, height)
     }
-    //fg.drawFillRect()
   }
 
   //Find car
@@ -145,7 +138,6 @@ object Play extends App {
       else
         finished = true
     }
-    println(height)
     height
   }
   // Find width of car
@@ -160,7 +152,6 @@ object Play extends App {
       else
         finished = true
     }
-    println(width)
     width
   }
 
@@ -246,17 +237,32 @@ object Play extends App {
 
   def initLevel(level : Int) : Unit={
     if (level == 1){
-      Car(3, widthV, height3V, 1, 1)
-      Car(53, width2H, heightH, 3, 3)
+      Car(3, widthV, height3V, 1, 3)
+      Car(4,widthV,height2V,2,5)
+      Car(5,widthV,height2V,6,1)
+      Car(53, width2H, heightH, 1, 1)
+      Car(54,width3H,heightH,3,1)
+      Car(55,width3H,heightH,3,4)
+      Car(56,width3H,heightH,4,6)
+
+      //sortie
+      playground(7)(4) = -2 /**Problème car correct dans le tableau, mais faux dans l'affichage*/
     }
     else {
       Car(4,widthV, height2V, 2, 2)
     }
+
   }
 
+  var changeLevel : Boolean = true
 
-  initLevel(currentLevel)
+  //initLevel(currentLevel)
   do {
+    if (changeLevel){
+      initLevel(currentLevel)
+      changeLevel = false
+    }
+
     // Logic déplacement + quitter
     if (pressedRight && keyHandled == false) {
       offsetH += step*100
@@ -310,12 +316,21 @@ object Play extends App {
         if (playground(row)(col) == -1){
           fg.drawFillRect(row*100,col*100 , 100, 100)
         }
+
         else if(playground(row)(col) != 0){
-          drawColorRect(row*100,col*100 , 100, 100, Color.BLUE)
+          //if vertical --> blue
+          if (playground(row)(col) >= 2 && playground(row)(col) <= 50 ){
+            drawColorRect(row*100,col*100 ,100 , 100, Color.BLUE)
+          }
+          //if horizontal --> red
+          if (playground(row)(col) >= 51 && playground(row)(col) <= 100) {
+            drawColorRect(row * 100, col * 100, 100, 100, Color.RED)
+          }
+          fg.drawRect(row*100,col*100 , getWidth(playground(row)(col)),getHeight(playground(row)(col)))
         }
 
         else{
-          fg.drawRect(row*100,col*100 , 100, 100)
+          //fg.drawRect(row*100,col*100 , 100, 100)
         }
 
       }
