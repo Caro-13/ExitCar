@@ -15,7 +15,7 @@ object Play extends App {
   val width2H = 180
   val width3H = 280
 
-  //gerer blink
+  //gérer blink
   var pressedUp = false
   var pressedDown = false
   var pressedRight = false
@@ -37,7 +37,7 @@ object Play extends App {
   var selectedCar: Int = selectCar()
   var keyHandled: Boolean = false
 
-  //this handle the clavier
+  //this handles the clavier
   val keyAdapter = new KeyAdapter() { // Will be called when a key has been pressed
 
     override def keyPressed(e: KeyEvent): Unit = {
@@ -64,7 +64,7 @@ object Play extends App {
   var posYMouse : Int = 0
   var posXMouse : Int = 0
 
-  //this handle the click of the mouse
+  //this handles the mouse click
   val mouseAdapter = new MouseAdapter {
     override def mouseClicked(e: MouseEvent): Unit = {
       val event = e
@@ -164,7 +164,7 @@ object Play extends App {
     width
   }
 
-  //Gere le déplacement de la voiture
+  //Gérer le déplacement de la voiture
   def moveCar(id: Int, dx: Int, dy: Int): Unit = {
     val height : Int = getHeight(id)
     val width : Int = getWidth(id)
