@@ -30,6 +30,7 @@ object Play extends App {
   var currentLevel: Int = 1
   var finishedLevel: Boolean = true //true pour lancer la première fois
   var finishedGame: Boolean = false
+  val finalLevel : Int = 3
   var quit: Boolean = false
   var playground: Array[Array[Int]] = Array.ofDim(8, 8)
   val nbRow : Int = playground.length
@@ -258,7 +259,6 @@ object Play extends App {
         //Car(56, width3H, heightH, 4, 6)
         //Voiture rouge
         Car(2, widthV, height2V, 4, 2)
-
         //sortie
         playground(7)(4) = -2
 
@@ -275,13 +275,23 @@ object Play extends App {
         Car(56,width2H,heightH,4,6)
         //voiture rouge
         Car(1,width2H,heightH,1,3)
-
         //sortie
         playground(3)(7) = -2
+
+      case 3 =>
+        Car(3,widthV,height2V,1,3)
+        Car(4,widthV,height2V,3,2)
+        Car(52, width2H,heightH,1,2)
+        //Car(53,width3H,heightH,2,4)
+        Car(54,width3H,heightH,1,6)
+        //RedCar
+        Car(2,widthV,height2V,4,2)
+        //sortie
+        playground(7)(4) = -2
     }
   }
 
-  //var changeLevel : Boolean = true
+
 
 
   do {
@@ -328,13 +338,13 @@ object Play extends App {
       fg.syncGameLogic(120)
     }
 
-    if (!quit && finishedLevel && currentLevel < 2){
+    if (!quit && finishedLevel && currentLevel < 3){
       Thread.sleep(1000)
       fg.clear()
       fg.drawString(100, 200, s"Youpi ! Tu as fini le level $currentLevel !", Color.BLACK, 25)
       Thread.sleep(2000)
     }
-    if (!quit && finishedLevel && currentLevel >= 2){
+    if (!quit && finishedLevel && currentLevel >= 3){
       finishedGame = true
     }
     currentLevel += 1
@@ -413,7 +423,7 @@ object Play extends App {
         finishedLevel = true
       }
       if (currentLevel == 3 && playground(7)(4) == 2) {
-        //finishLevel()
+        finishedLevel = true
       }
     }
   }
