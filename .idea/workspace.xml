@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="393314eb-4337-466f-9084-715001700820" name="Changes" comment="09.01.25">
+    <list default="true" id="393314eb-4337-466f-9084-715001700820" name="Changes" comment="10.01.25">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ExitCar/Play$$anon$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ExitCar/Play$$anon$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ExitCar/Play$.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ExitCar/Play$.class" afterDir="false" />
@@ -77,7 +77,14 @@
       <option name="project" value="LOCAL" />
       <updated>1736437972932</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="10.01.25">
+      <created>1736520289235</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1736520289235</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -95,6 +102,7 @@
     <MESSAGE value="First Commit" />
     <MESSAGE value="08.01.25" />
     <MESSAGE value="09.01.25" />
-    <option name="LAST_COMMIT_MESSAGE" value="09.01.25" />
+    <MESSAGE value="10.01.25" />
+    <option name="LAST_COMMIT_MESSAGE" value="10.01.25" />
   </component>
 </project>
