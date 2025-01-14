@@ -417,9 +417,9 @@ object Play extends App {
       //draw grille
       for (row <- 0 until nbRow) {
         for (col <- 0 until nbCol) {
-          if (playground(row)(col) != previousPG(row)(col)){
+          //if (playground(row)(col) != previousPG(row)(col)){
             drawUpdateGrille(row, col)
-          }
+          //}
         }
       }
     }
