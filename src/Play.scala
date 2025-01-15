@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 object Play extends App {
   val fg: FunGraphics = new FunGraphics(800, 800)
 
-  //val width and weight en fonctipon de taille et prientation
+  //val width and height en fonction de taille et orientation
   val widthV = 80
   val height2V = 180
   val height3V = 280
@@ -16,7 +16,7 @@ object Play extends App {
   val width2H = 180
   val width3H = 280
 
-  //gerer key pressed only once and effect
+  //gérer key pressed only once and effect
   var pressedUp = false
   var pressedDown = false
   var pressedRight = false
@@ -42,7 +42,7 @@ object Play extends App {
   val nbCol : Int = playground(0).length
 
 
-  //this handle the clavier
+  //this handle the keyboard
   val keyAdapter = new KeyAdapter() { // Will be called when a key has been pressed
 
     override def keyPressed(e: KeyEvent): Unit = {
@@ -73,7 +73,7 @@ object Play extends App {
   var posYMouse : Int = 0
   var posXMouse : Int = 0
 
-  //this handle the click of the mouse
+  //this handle the mouse click
   val mouseAdapter: MouseAdapter = new MouseAdapter {
     var i : Int = 0;
     override def mouseClicked(e: MouseEvent): Unit = {
@@ -174,7 +174,7 @@ object Play extends App {
     width
   }
 
-  //Gere le déplacement de la voiture
+  //Gérer le déplacement de la voiture
   def moveCar(id: Int, dx: Int, dy: Int): Unit = {
     val height : Int = getHeight(id)
     val width : Int = getWidth(id)
@@ -332,6 +332,7 @@ object Play extends App {
 
   //Le Jeu
   fg.drawString(120,400,"Welcome to the ExitCar game !",Color.BLACK,40)
+  //fg.drawTransformedPicture(200, 500, 0, 2, "/res/")
   Thread.sleep(2000)
   while (play) {
     println(previousPG2Text())
@@ -415,7 +416,7 @@ object Play extends App {
   }
 
 
-  //Gere l'affichage et la réussite du level
+  //Gérer l'affichage et la réussite du level
   def level(): Unit = {
     fg.frontBuffer.synchronized {
       //draw grille or draw updated grille
@@ -443,8 +444,8 @@ object Play extends App {
         /*drawColorRect(col*100+1, row*100+1,100-1,100-1,Color.LIGHT_GRAY)
         fg.setColor(Color.BLACK)
         fg.drawRect(col*100, row*100,100,100)*/
-        drawColorRect(col * 100, row * 100, 100, 100, Color.LIGHT_GRAY)
-        //fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.1, "/road.png")
+        //drawColorRect(col * 100, row * 100, 100, 100, Color.LIGHT_GRAY)
+        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.1, "/road.png")
 
       case 1 | 2 => //RedCar
         drawColorRect(col * 100, row * 100, 100, 100, Color.RED)
