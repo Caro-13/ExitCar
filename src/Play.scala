@@ -331,8 +331,8 @@ object Play extends App {
   }
 
   //Le Jeu
-  fg.drawString(120,400,"Welcome to the ExitCar game !",Color.BLACK,40)
-  //fg.drawTransformedPicture(200, 500, 0, 2, "/res/")
+  fg.drawString(120,400,"Let's play a game !",Color.BLACK,40)
+  //fg.drawTransformedPicture(200, 500, 0, 2, "/res/welcome.png")
   Thread.sleep(2000)
   while (play) {
     println(previousPG2Text())
@@ -368,6 +368,7 @@ object Play extends App {
         Thread.sleep(1000)
         fg.clear()
         fg.drawString(100, 200, s"Youpi ! Tu as fini le level $currentLevel !", Color.BLACK, 25)
+        fg.drawTransformedPicture(200, 500, 0, 2, "/res/confetti.png")
         Thread.sleep(2000)
       }
       //fini le jeu si fini le level final
@@ -388,7 +389,8 @@ object Play extends App {
     if (finishedGame) {
       fg.clear()
       fg.drawString(100, 200, s"Suuuper ! Tu as fini le jeu !", Color.BLACK, 25)
-      fg.drawTransformedPicture(200, 500, 0, 2, "/res/ISC_Logo2.png")
+      fg.drawTransformedPicture(100, 300, 0, 2, "/res/confetti.png")
+      fg.drawTransformedPicture(200, 500, 0, 2, "/res/success.png")
       Thread.sleep(3000)
       fg.clear()
       while (!answeredReplay){
@@ -402,6 +404,8 @@ object Play extends App {
   if(!play && !quit && finishedGame){
     fg.clear()
     fg.drawString(120,400,"Merci d'avoir joué, à bientôt !", Color.BLACK,40)
+    fg.drawTransformedPicture(100, 100, 0, 2, "/res/bye.png")
+    fg.drawTransformedPicture(500, 500, 0, 2, "/res/byebye.png")
     Thread.sleep(2000)
     System.exit(-1)
   }
@@ -410,7 +414,7 @@ object Play extends App {
   if (quit) {
     fg.clear()
     fg.drawFancyString(150, 200, "T'es une grosse merde !",Color.RED,40)
-    fg.drawTransformedPicture(400, 500, 0, 2, "/res/ISC_Logo2.png")
+    fg.drawTransformedPicture(400, 500, 0, 2, "/res/poop.png")
     Thread.sleep(5000)
     System.exit(-1)
   }
@@ -445,7 +449,7 @@ object Play extends App {
         fg.setColor(Color.BLACK)
         fg.drawRect(col*100, row*100,100,100)*/
         //drawColorRect(col * 100, row * 100, 100, 100, Color.LIGHT_GRAY)
-        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.1, "/road.png")
+        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.1, "/res/asphalt.png")
 
       case 1 | 2 => //RedCar
         drawColorRect(col * 100, row * 100, 100, 100, Color.RED)
@@ -534,6 +538,7 @@ object Play extends App {
 
   def wannaReplay(): Unit = {
     fg.drawString(100, 200, s"Tu veux rejouer ?", Color.BLACK, 25)
+    fg.drawTransformedPicture(300, 500, 0, 2, "/res/replay.png")
     if (pressedY && !keyHandled) {
       println("Y pressed")
       currentLevel = 0
