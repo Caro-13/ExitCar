@@ -2,21 +2,19 @@ import hevs.graphics.FunGraphics
 
 import java.awt.{Color, Rectangle}
 import java.awt.event.{KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
-import java.time.LocalDateTime
-
 
 object Play extends App {
-  val fg: FunGraphics = new FunGraphics(800, 800)
+  val fg: FunGraphics = new FunGraphics(800, 800,"ExitCar")
 
-  //val width and weight en fonctipon de taille et prientation
-  val widthV = 80
-  val height2V = 180
-  val height3V = 280
-  val heightH = 80
-  val width2H = 180
-  val width3H = 280
+  //val width and height en fonction de taille et orientation
+  val widthV = 100 //80
+  val height2V = 200 //180
+  val height3V = 300 //280
+  val heightH = 100 //80
+  val width2H = 200 //180
+  val width3H = 300 //280
 
-  //gerer key pressed only once and effect
+  //Handles key pressed only once and effect
   var pressedUp = false
   var pressedDown = false
   var pressedRight = false
@@ -28,21 +26,26 @@ object Play extends App {
   var offsetH = 0
   var offsetV = 0
   var step = 1
+  var arrayToDisplay = 100
   var keyHandled: Boolean = false
+  var answeredReplay: Boolean = false
 
   var currentLevel: Int = 0
   var finishedLevel: Boolean = true //true pour lancer la première fois
   var finishedGame: Boolean = false
-  val finalLevel : Int = 3 //Nb de niveau pour finir le jeu
+  val finalLevel: Int = 1 //Nb de niveau pour finir le jeu
   var quit: Boolean = false
-  var play : Boolean = true
+  var play: Boolean = true
   var playground: Array[Array[Int]] = Array.ofDim(8, 8)
-  var previousPG : Array[Array[Int]] = Array.fill(8,8)(3) //Array.ofDim(8, 8)
-  val nbRow : Int = playground.length
-  val nbCol : Int = playground(0).length
+  var previousPG: Array[Array[Int]] = Array.fill(8, 8)(3)
+  val nbRow: Int = playground.length
+  val nbCol: Int = playground(0).length
+
+  //Pour afficher la voiture en grand
+  var voituresLa: Array[Int] = Array(14)
 
 
-  //this handle the clavier
+  //this handles the clavier
   val keyAdapter = new KeyAdapter() { // Will be called when a key has been pressed
 
     override def keyPressed(e: KeyEvent): Unit = {
@@ -70,15 +73,16 @@ object Play extends App {
   }
   fg.setKeyManager(keyAdapter)
 
-  var posYMouse : Int = 0
-  var posXMouse : Int = 0
+  var posYMouse: Int = 0
+  var posXMouse: Int = 0
 
-  //this handle the click of the mouse
+  //this handles the mouse
   val mouseAdapter: MouseAdapter = new MouseAdapter {
-    var i : Int = 0;
-    override def mouseClicked(e: MouseEvent): Unit = {
+    var i: Int = 0;
+
+    override def mousePressed(e: MouseEvent): Unit = {
       println(s"mouse clicked $i")
-      i+=1
+      i += 1
       val event = e
       // Get the mouse position from the event
       val posx = event.getX
@@ -91,6 +95,7 @@ object Play extends App {
   fg.addMouseListener(mouseAdapter)
 
   var selectedCar: Int = selectCar()
+
   //Get the ID of the car selected (from mouse click)
   def selectCar(): Int = {
     val posYSelect: Int = posYMouse / 100
@@ -98,13 +103,13 @@ object Play extends App {
     playground(posYSelect)(posXSelect)
   }
 
-  def Car(ID: Int, width: Int, height: Int, posX: Int, posY: Int): Unit = {
+  def car(ID: Int, width: Int, height: Int, posX: Int, posY: Int): Unit = {
 
     //Voitures verticales en fonction de l'ID
     if (ID >= 2 && ID <= 50) {
       var nbCasesV: Int = (height + 20) / 100
       for (i <- 0 until nbCasesV) {
-        playground(posY+i)(posX) = ID
+        playground(posY + i)(posX) = ID
       }
     }
 
@@ -117,16 +122,15 @@ object Play extends App {
     }
 
     //Voiture Rouge (deux ID : 2 = vertical, ID = 1 horizontal)
-
   }
 
   //Find car
-  def findCar(id : Int): Array[Int]={
+  def findCar(id: Int): Array[Int] = {
     // Trouver la voiture, la déplacer dans le sens dx,dy
     var startX: Int = 0
     var startY: Int = 0
     var found: Boolean = false
-    val coordCar : Array[Int] = new Array[Int](2)
+    val coordCar: Array[Int] = new Array[Int](2)
 
     // Moche mais ça marche : trouve le début de la voiture id
     for (row <- 0 until playground.length) {
@@ -144,9 +148,7 @@ object Play extends App {
   }
 
   // Calculate height of car
-  def getHeight(id: Int): Int =
-
-  {
+  def getHeight(id: Int): Int = {
     val startX = findCar(id)(0)
     val startY = findCar(id)(1)
     var finished: Boolean = false
@@ -159,6 +161,7 @@ object Play extends App {
     }
     height
   }
+
   // Calculate width of car
   def getWidth(id: Int): Int = {
     val startX = findCar(id)(0)
@@ -176,51 +179,51 @@ object Play extends App {
 
   //Gere le déplacement de la voiture
   def moveCar(id: Int, dx: Int, dy: Int): Unit = {
-    val height : Int = getHeight(id)
-    val width : Int = getWidth(id)
+    val height: Int = getHeight(id)
+    val width: Int = getWidth(id)
     val startX = findCar(id)(0)
     val startY = findCar(id)(1)
 
     //Contrainte déplacement soit horizontal soit vertical en fonction de l'id
-    var moveH : Boolean = false
-    var moveV : Boolean = false
-    if (id >= 2 && id <= 50){
+    var moveH: Boolean = false
+    var moveV: Boolean = false
+    if (id >= 2 && id <= 50) {
       moveV = true
     }
-    else if (id >= 51 && id <= 100 || id == 1){
+    else if (id >= 51 && id <= 100 || id == 1) {
       moveH = true
     }
 
     updatePreviousPG()
 
     // Déplacement UP
-    if (dy == 1 && isEmpty(id,startY - 1,startX) && moveV) {
+    if (dy == 1 && isEmpty(id, startY - 1, startX) && moveV) {
       playground(startY - 1)(startX) = id
       playground(startY + height - 1)(startX) = 0
     }
     //Déplacement DOWN
-    else if (dy == -1 && isEmpty(id,startY+height,startX) && moveV){
+    else if (dy == -1 && isEmpty(id, startY + height, startX) && moveV) {
       playground(startY)(startX) = 0
-      playground(startY+height)(startX) = id
+      playground(startY + height)(startX) = id
     }
     //Déplacement RIGHT
-    else if(dx == 1 && isEmpty(id,startY,startX +width) && moveH){
+    else if (dx == 1 && isEmpty(id, startY, startX + width) && moveH) {
       playground(startY)(startX) = 0
-      playground(startY)(startX +width) = id
+      playground(startY)(startX + width) = id
     }
     //Déplacement LEFT
-    else if (dx == -1 && isEmpty(id,startY,startX-1) && moveH){
-      playground(startY)(startX-1) = id
-      playground(startY)(startX + width-1) = 0
+    else if (dx == -1 && isEmpty(id, startY, startX - 1) && moveH) {
+      playground(startY)(startX - 1) = id
+      playground(startY)(startX + width - 1) = 0
     }
 
     println(playGround2Text())
   }
 
   //vérifie que la prochaine cellule est disponible, et si RedCar que la sortie c'est ok
-  def isEmpty(id:Int, nextY : Int, nextX : Int): Boolean ={
-    var empty : Boolean = true
-    val nextPos : Int = playground(nextY)(nextX)
+  def isEmpty(id: Int, nextY: Int, nextX: Int): Boolean = {
+    var empty: Boolean = true
+    val nextPos: Int = playground(nextY)(nextX)
     //Permet a la voiture rouge de passer par la sortie, et vides, mais pas murs ou autres voitures
     if (id == 1 || id == 2) {
       nextPos match {
@@ -229,8 +232,8 @@ object Play extends App {
         case _ => empty = false
       }
     }
-      //Empeche de traverser les murs ou autres voitures
-    else{
+    //Empeche de traverser les murs ou autres voitures
+    else {
       if (nextPos != 0) {
         empty = false
       }
@@ -248,6 +251,7 @@ object Play extends App {
     temp
   }
 
+  //Affiche le previous playground sur la console à des fins de test
   def previousPG2Text(): String = {
     var temp: String = ""
     for (i <- previousPG.indices) {
@@ -257,13 +261,9 @@ object Play extends App {
     temp
   }
 
-  def drawColorRect(posX: Int, posY: Int, width: Int, height: Int, color: Color): Unit = {
-    fg.setColor(color)
-    fg.drawFillRect(posX, posY, width, height)
-  }
 
   //Affichage initial de chaque level
-  def initLevel(level : Int) : Unit={
+  def initLevel(level: Int): Unit = {
     //met une bordure au tableau
     for (col <- 0 until nbCol) {
       playground(0)(col) = -1
@@ -274,7 +274,7 @@ object Play extends App {
       playground(row)(nbCol - 1) = -1
     }
 
-    /**Pour faciliter voitures :
+    /** Pour faciliter gestion humaine des voitures :
      * 1 : RedCar Horizontale
      * 2 : RedCar Verticale
      * 20-29 : Verticales - taille 2
@@ -284,45 +284,49 @@ object Play extends App {
      */
     level match {
       case 1 =>
-        Car(30, widthV, height3V, 1, 3)
-        Car(20, widthV, height2V, 2, 5)
-        Car(21, widthV, height2V, 6, 1)
-        Car(60, width2H, heightH, 1, 1)
-        Car(71, width3H, heightH, 3, 1)
-        //Car(72, width3H, heightH, 3, 4)
-        //Car(73, width3H, heightH, 4, 6)
+        car(30, widthV, height3V, 1, 3)
+        car(20, widthV, height2V, 2, 5)
+        car(21, widthV, height2V, 6, 1)
+        car(60, width2H, heightH, 1, 1)
+        car(71, width3H, heightH, 3, 1)
+        //car(72, width3H, heightH, 3, 4)
+        //car(73, width3H, heightH, 4, 6)
         //RedCar
-        Car(2, widthV, height2V, 4, 2)
+        car(2, widthV, height2V, 4, 2)
         //sortie
         playground(7)(4) = -2
+
+        voituresLa = Array(30, 20, 21, 60, 71, 72, 73, 2)
 
       case 2 =>
-        Car(20,widthV,height2V,1,1)
-        Car(21,widthV,height2V,3,5)
-        //Car(22,widthV,height2V,4,2)
-        //Car(23,widthV,height2V,5,3)
-        //Car(24,widthV,height3V,6,2)
-        Car(70, width3H,heightH,1,4)
-        Car(60,width2H,heightH,1,6)
-        Car(71,width3H,heightH,4,1)
-        Car(61,width2H,heightH,5,5)
-        Car(62,width2H,heightH,4,6)
+        car(20, widthV, height2V, 1, 1)
+        car(21, widthV, height2V, 3, 5)
+        //car(22,widthV,height2V,4,2)
+        //car(23,widthV,height2V,5,3)
+        //car(34,widthV,height3V,6,2)
+        car(70, width3H, heightH, 1, 4)
+        car(60, width2H, heightH, 1, 6)
+        car(71, width3H, heightH, 4, 1)
+        car(61, width2H, heightH, 5, 5)
+        car(62, width2H, heightH, 4, 6)
         //RedCar
-        Car(1,width2H,heightH,1,3)
+        car(1, width2H, heightH, 1, 3)
         //sortie
         playground(3)(7) = -2
+        voituresLa = Array(20, 21, 22, 23, 34, 70, 60, 71, 61, 62, 1)
 
       case 3 =>
-        Car(20,widthV,height2V,1,3)
-        Car(21,widthV,height2V,3,2)
-        Car(22, width2H,heightH,1,2)
-        //Car(30,width3H,heightH,2,4)
-        Car(60,width3H,heightH,1,6)
+        car(20, widthV, height2V, 1, 3)
+        car(21, widthV, height2V, 3, 2)
+        car(60, width2H, heightH, 1, 2)
+        //car(70,width3H,heightH,2,4)
+        car(71, width3H, heightH, 1, 6)
         //RedCar
-        Car(2,widthV,height2V,4,2)
+        car(2, widthV, height2V, 4, 2)
         //sortie
         playground(7)(4) = -2
-      case _ =>
+        voituresLa = Array(20, 21, 60,70,71, 2)
+      case _ => //enlever ça
         println(level)
         fg.drawString(500, 200, s"Oupss", Color.BLACK, 25)
         Thread.sleep(3000)
@@ -330,17 +334,13 @@ object Play extends App {
     }
   }
 
+
   //Le Jeu
-  fg.drawString(120,400,"Welcome to the ExitCar game !",Color.BLACK,40)
+  fg.drawString(250, 80, "Let's play ! !", Color.BLACK, 50)
+  fg.drawTransformedPicture(400,400,0,1.5,"/res/welcome.png")
   Thread.sleep(2000)
+  fg.clear()
   while (play) {
-    println(previousPG2Text())
-    println(playGround2Text())
-    println(currentLevel)
-    println(play)
-    println(finishedLevel)
-    println(finishedGame)
-    println(quit)
     do {
       currentLevel += 1
       //Affiche le début du niveau
@@ -349,7 +349,7 @@ object Play extends App {
         finishedLevel = false
       }
 
-      //Une partie de finalLevel parties
+      //Une partie parmi nb finalLevel de parties
       while (!finishedLevel && !quit) {
         // Logic déplacement + quitter
         buttonPressed()
@@ -361,36 +361,42 @@ object Play extends App {
         //refresh the screen at 60 FPS
         fg.syncGameLogic(60)
       }
+      playground = Array.ofDim(8, 8)
+      previousPG = Array.fill(8, 8)(3)
+
 
       //passe au niveau suivant si fini level < level final
       if (!quit && finishedLevel && currentLevel < finalLevel) {
         Thread.sleep(1000)
         fg.clear()
-        fg.drawString(100, 200, s"Youpi ! Tu as fini le level $currentLevel !", Color.BLACK, 25)
+        fg.drawTransformedPicture(200, 500, 0, 2, "/res/confettis.png")
+        fg.drawString(180, 400, s"Youpi ! Tu as fini le level $currentLevel !", Color.BLACK, 40)
         Thread.sleep(2000)
+        fg.clear()
       }
       //fini le jeu si fini le level final
       if (!quit && finishedLevel && currentLevel >= finalLevel) {
         finishedGame = true
       }
-      if (quit){
+      if (quit) {
         play = false
       }
 
-      playground = Array.ofDim(8, 8)
-      previousPG = Array.fill(8,8)(3)
       checkGameFinished()
       Thread.sleep(10)
     } while (!quit && !finishedGame)
 
-  //fin du jeu puis si recommencer ou non
+    //fin du jeu puis si recommencer ou non
     if (finishedGame) {
       fg.clear()
-      fg.drawString(100, 200, s"Suuuper ! Tu as fini le jeu !", Color.BLACK, 25)
-      fg.drawTransformedPicture(200, 500, 0, 2, "/res/ISC_Logo2.png")
+      fg.drawTransformedPicture(400, 400, 0, 1, "/res/success.png")
+      fg.drawString(200, 200, s"Suuuper ! Tu as fini le jeu !", Color.BLACK, 25)
       Thread.sleep(3000)
       fg.clear()
-      while (!answeredReplay){
+      fg.drawTransformedPicture(400, 400, 0, 2, "/res/replay.png")
+      fg.drawString(100, 200, s"Tu veux rejouer ?", Color.BLACK, 25)
+      while (!answeredReplay) {
+        Thread.sleep(10)
         wannaReplay()
       }
       answeredReplay = false
@@ -398,79 +404,91 @@ object Play extends App {
   }
 
   //A fini le jeu et ne recommence pas
-  if(!play && !quit && finishedGame){
+  if (!play && !quit && finishedGame) {
     fg.clear()
-    fg.drawString(120,400,"Merci d'avoir joué, à bientôt !", Color.BLACK,40)
-    Thread.sleep(2000)
+    fg.drawTransformedPicture(550, 300, 0, 2, "/res/byebye.png")
+    fg.drawString(150, 600, "Merci d'avoir joué, à bientôt !", Color.BLACK, 40)
+    Thread.sleep(1000)
     System.exit(-1)
   }
 
   //A quitté le jeu avant la fin
   if (quit) {
     fg.clear()
-    fg.drawFancyString(150, 200, "T'es une grosse merde !",Color.RED,40)
-    fg.drawTransformedPicture(400, 500, 0, 2, "/res/ISC_Logo2.png")
+    fg.drawFancyString(150, 200, "T'es une grosse merde !", Color.RED, 40)
+    fg.drawTransformedPicture(400, 450, 0, 2, "/res/poop.png")
     Thread.sleep(5000)
     System.exit(-1)
   }
 
 
-  //Gere l'affichage et la réussite du level
+  //Gere l'affichage
   def level(): Unit = {
     fg.frontBuffer.synchronized {
-      //draw grille or draw updated grille
-      for (row <- 0 until nbRow) {
-        for (col <- 0 until nbCol) {
-          if (playground(row)(col) != previousPG(row)(col)){
-            drawUpdateGrille(row, col)
-          }
+      fg.clear()
+
+      //Draw sol
+      fg.drawTransformedPicture(1*100+300,1*100+300,0,1,"/res/sol.png")
+      //Draw borders
+      drawBorders()
+
+      //draw grille
+      for (i <- voituresLa.indices){
+        val id : Int = voituresLa(i)
+        val row : Int = findCar(id)(1)
+        val col : Int = findCar(id)(0)
+        drawBigCars(row, col)
+      }
+      /** Early optimization is the root of all evil*/ //Paroles d'un sage...
+    }
+  }
+//Affiche les bordures
+  def drawBorders():Unit={
+    for (row <- 0 until nbRow) {
+      for (col <- 0 until nbCol) {
+        playground(row)(col) match {
+          case -2 => //Sortie
+            fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/ISC_Logo.png")
+
+          case -1 => //Murs
+            fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/aleph_invert.png")
+
+          case _ =>
         }
       }
     }
   }
+//Affiche les voitures
+  def drawBigCars(row: Int, col: Int): Unit = {
+    val ID: Int = playground(row)(col)
+    val offset : Int = 50
+    val height: Int = getHeight(ID) * offset
+    val width: Int = getWidth(ID) * offset
+    ID match {
+      case 1 => //RedCar Horizontal
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,0.08,"/res/RedCarH.png")
 
-  def drawUpdateGrille(row : Int, col : Int): Unit = {
-    /** La fonction drawRect prend d'abord X puis Y --> ça change l'orientation des voitures */
-    playground(row)(col) match {
-      case -2 => //Sortie
-        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/ISC_Logo2.png")
-
-      case -1 => //Murs
-        //drawColorRect(col * 100, row * 100, 100, 100,Color.BLACK)
-        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/aleph_invert.png")
-
-      case 0 => //Route
-        /*drawColorRect(col*100+1, row*100+1,100-1,100-1,Color.LIGHT_GRAY)
-        fg.setColor(Color.BLACK)
-        fg.drawRect(col*100, row*100,100,100)*/
-        drawColorRect(col * 100, row * 100, 100, 100, Color.LIGHT_GRAY)
-        //fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.1, "/road.png")
-
-      case 1 | 2 => //RedCar
-        drawColorRect(col * 100, row * 100, 100, 100, Color.RED)
-        //fg.drawTransformedPicture(col*100+50,row*100+50,0,1,"/Mudry3.png")
+      case 2 => //RedCar Vertical
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,0.08,"/res/RedCarV.png")
 
       case 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 => //Voitures Verticales taille 2
-        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE.brighter())
-        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,0.08,"/res/Car_GreenV.png")
 
       case 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 => //Voitures Verticales taille 3
-        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE.darker())
-        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,1.6,"/res/BusV.png")
+
 
       case 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 => //Voitures Horizontales taille 2
-        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN.brighter())
-        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet_bis.png")
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,0.08,"/res/Car_BlueH.png")
 
       case 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 => //Voitures Horizontales taille 3
-        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN.darker())
-        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet2_Black.png")
+        fg.drawTransformedPicture(col*arrayToDisplay+width,row*arrayToDisplay+height,0,1.6,"/res/BusH.png")
 
       case _ =>
-        println("I don't know what's happening...")
     }
   }
-  def updatePreviousPG():Unit = {
+//Met à jour le previous playground
+  def updatePreviousPG(): Unit = {
     for (row <- 0 until nbRow) {
       for (col <- 0 until nbCol) {
         if (previousPG(row)(col) != playground(row)(col)) {
@@ -480,7 +498,8 @@ object Play extends App {
     }
   }
 
-  def checkLevelFinished() : Boolean = {
+  //Gere la réussite du level
+  def checkLevelFinished(): Boolean = {
     if (currentLevel == 1 && playground(7)(4) == 2) {
       finishedLevel = true
     }
@@ -492,12 +511,13 @@ object Play extends App {
     }
     false
   }
-  def checkGameFinished() : Boolean = {
+  //Gere la réussite du jeu
+  def checkGameFinished(): Boolean = {
     if (currentLevel == finalLevel && finishedLevel) finishedGame = true
     false
   }
-
-  def buttonPressed():Unit = {
+  //Gere les effets du clavier
+  def buttonPressed(): Unit = {
     if (pressedRight && keyHandled == false) {
       offsetH += step * 100
       // Pile l'endroit pour changer l'état de la voiture
@@ -528,11 +548,8 @@ object Play extends App {
     }
 
   }
-
-  var answeredReplay : Boolean = false
-
+//Vérifie qu'il y a une réponse a la question rejouer
   def wannaReplay(): Unit = {
-    fg.drawString(100, 200, s"Tu veux rejouer ?", Color.BLACK, 25)
     if (pressedY && !keyHandled) {
       println("Y pressed")
       currentLevel = 0
@@ -549,6 +566,5 @@ object Play extends App {
       answeredReplay = true
     }
     buttonPressed()
-    //answeredReplay
   }
 }
