@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="393314eb-4337-466f-9084-715001700820" name="Changes" comment="Version_jouable">
+    <list default="true" id="393314eb-4337-466f-9084-715001700820" name="Changes" comment="MonstreLag">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ExitCar/ISC_Logo2.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ExitCar/Play$$anon$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ExitCar/Play$$anon$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ExitCar/Play$.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ExitCar/Play$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/ExitCar/Play.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ExitCar/Play.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Cars/Car.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ISC_Logo2.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/ISC_Logo2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Play.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aleph_invert.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="Change_10_01_25" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,6 +50,11 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Carol\Desktop\2024-2025\ProjetProg\ExitCar\src\res" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -97,7 +106,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736783128378</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="MonstreLag">
+      <created>1736880408712</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1736880408712</updated>
+    </task>
+    <task id="LOCAL-00008" summary="MonstreLag">
+      <created>1736880664964</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1736880664964</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -118,6 +141,7 @@
     <MESSAGE value="10.01.25" />
     <MESSAGE value="13.01.25" />
     <MESSAGE value="Version_jouable" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version_jouable" />
+    <MESSAGE value="MonstreLag" />
+    <option name="LAST_COMMIT_MESSAGE" value="MonstreLag" />
   </component>
 </project>

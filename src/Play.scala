@@ -30,7 +30,7 @@ object Play extends App {
   var step = 1
   var keyHandled: Boolean = false
 
-  var currentLevel: Int = 1
+  var currentLevel: Int = 0
   var finishedLevel: Boolean = true //true pour lancer la première fois
   var finishedGame: Boolean = false
   val finalLevel : Int = 3 //Nb de niveau pour finir le jeu
@@ -52,8 +52,8 @@ object Play extends App {
       if (e.getKeyCode == KeyEvent.VK_DOWN) pressedDown = true
       if (e.getKeyChar == 'q') pressedQ = true
       if (e.getKeyChar == 'r') pressedR = true
-      if (e.getKeyChar == 'y') pressedQ = true
-      if (e.getKeyChar == 'n') pressedR = true
+      if (e.getKeyChar == 'y') pressedY = true
+      if (e.getKeyChar == 'n') pressedN = true
     }
 
     override def keyReleased(e: KeyEvent): Unit = {
@@ -63,8 +63,8 @@ object Play extends App {
       if (e.getKeyCode == KeyEvent.VK_DOWN) pressedDown = false
       if (e.getKeyChar == 'q') pressedQ = false
       if (e.getKeyChar == 'r') pressedR = false
-      if (e.getKeyChar == 'y') pressedQ = false
-      if (e.getKeyChar == 'n') pressedR = false
+      if (e.getKeyChar == 'y') pressedY = false
+      if (e.getKeyChar == 'n') pressedN = false
       keyHandled = false
     }
   }
@@ -72,9 +72,13 @@ object Play extends App {
 
   var posYMouse : Int = 0
   var posXMouse : Int = 0
+
   //this handle the click of the mouse
-  val mouseAdapter = new MouseAdapter {
+  val mouseAdapter: MouseAdapter = new MouseAdapter {
+    var i : Int = 0;
     override def mouseClicked(e: MouseEvent): Unit = {
+      println(s"mouse clicked $i")
+      i+=1
       val event = e
       // Get the mouse position from the event
       val posx = event.getX
@@ -187,10 +191,7 @@ object Play extends App {
       moveH = true
     }
 
-    println(previousPG2Text())
     updatePreviousPG()
-    println(previousPG2Text())
-
 
     // Déplacement UP
     if (dy == 1 && isEmpty(id,startY - 1,startX) && moveV) {
@@ -287,9 +288,9 @@ object Play extends App {
         Car(20, widthV, height2V, 2, 5)
         Car(21, widthV, height2V, 6, 1)
         Car(60, width2H, heightH, 1, 1)
-        Car(61, width3H, heightH, 3, 1)
-        //Car(62, width3H, heightH, 3, 4)
-        //Car(63, width3H, heightH, 4, 6)
+        Car(71, width3H, heightH, 3, 1)
+        //Car(72, width3H, heightH, 3, 4)
+        //Car(73, width3H, heightH, 4, 6)
         //RedCar
         Car(2, widthV, height2V, 4, 2)
         //sortie
@@ -322,20 +323,26 @@ object Play extends App {
         //sortie
         playground(7)(4) = -2
       case _ =>
+        println(level)
         fg.drawString(500, 200, s"Oupss", Color.BLACK, 25)
         Thread.sleep(3000)
 
     }
   }
 
-
-
-
   //Le Jeu
   fg.drawString(120,400,"Welcome to the ExitCar game !",Color.BLACK,40)
   Thread.sleep(2000)
   while (play) {
+    println(previousPG2Text())
+    println(playGround2Text())
+    println(currentLevel)
+    println(play)
+    println(finishedLevel)
+    println(finishedGame)
+    println(quit)
     do {
+      currentLevel += 1
       //Affiche le début du niveau
       if (finishedLevel) {
         initLevel(currentLevel)
@@ -346,13 +353,13 @@ object Play extends App {
       while (!finishedLevel && !quit) {
         // Logic déplacement + quitter
         buttonPressed()
-
-        //Gere l'affichage et la réussite du level
-        Level()
         checkLevelFinished()
 
-        //refresh the screen at 120 FPS
-        fg.syncGameLogic(200)
+        // Dessine le niveau
+        level()
+
+        //refresh the screen at 60 FPS
+        fg.syncGameLogic(60)
       }
 
       //passe au niveau suivant si fini level < level final
@@ -370,31 +377,30 @@ object Play extends App {
         play = false
       }
 
-      currentLevel += 1
       playground = Array.ofDim(8, 8)
       previousPG = Array.fill(8,8)(3)
       checkGameFinished()
-      //refresh the screen at 60 FPS
-      //fg.syncGameLogic(120)
+      Thread.sleep(10)
     } while (!quit && !finishedGame)
 
   //fin du jeu puis si recommencer ou non
     if (finishedGame) {
       fg.clear()
       fg.drawString(100, 200, s"Suuuper ! Tu as fini le jeu !", Color.BLACK, 25)
-      fg.drawTransformedPicture(200, 500, 0, 2, "/ISC_Logo2.png")
+      fg.drawTransformedPicture(200, 500, 0, 2, "/res/ISC_Logo2.png")
       Thread.sleep(3000)
       fg.clear()
       while (!answeredReplay){
         wannaReplay()
       }
+      answeredReplay = false
     }
   }
 
   //A fini le jeu et ne recommence pas
   if(!play && !quit && finishedGame){
     fg.clear()
-    fg.drawString(120,400,"Merci d'avoir jouer, à bientôt !", Color.BLACK,40)
+    fg.drawString(120,400,"Merci d'avoir joué, à bientôt !", Color.BLACK,40)
     Thread.sleep(2000)
     System.exit(-1)
   }
@@ -403,23 +409,21 @@ object Play extends App {
   if (quit) {
     fg.clear()
     fg.drawFancyString(150, 200, "T'es une grosse merde !",Color.RED,40)
-    fg.drawTransformedPicture(400, 500, 0, 2, "/ISC_Logo2.png")
+    fg.drawTransformedPicture(400, 500, 0, 2, "/res/ISC_Logo2.png")
     Thread.sleep(5000)
     System.exit(-1)
   }
 
 
-
   //Gere l'affichage et la réussite du level
-  def Level(): Unit = {
+  def level(): Unit = {
     fg.frontBuffer.synchronized {
-      fg.clear()
-      //draw grille
+      //draw grille or draw updated grille
       for (row <- 0 until nbRow) {
         for (col <- 0 until nbCol) {
-          //if (playground(row)(col) != previousPG(row)(col)){
+          if (playground(row)(col) != previousPG(row)(col)){
             drawUpdateGrille(row, col)
-          //}
+          }
         }
       }
     }
@@ -429,14 +433,14 @@ object Play extends App {
     /** La fonction drawRect prend d'abord X puis Y --> ça change l'orientation des voitures */
     playground(row)(col) match {
       case -2 => //Sortie
-        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/ISC_Logo2.png")
+        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/ISC_Logo2.png")
 
       case -1 => //Murs
         //drawColorRect(col * 100, row * 100, 100, 100,Color.BLACK)
-        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/aleph_invert.png")
+        fg.drawTransformedPicture(col * 100 + 50, row * 100 + 50, 0, 0.5, "/res/aleph_invert.png")
 
       case 0 => //Route
-        /*drawColorRect(col*100+1, row*100+1,100-2,100-2,Color.LIGHT_GRAY)
+        /*drawColorRect(col*100+1, row*100+1,100-1,100-1,Color.LIGHT_GRAY)
         fg.setColor(Color.BLACK)
         fg.drawRect(col*100, row*100,100,100)*/
         drawColorRect(col * 100, row * 100, 100, 100, Color.LIGHT_GRAY)
@@ -444,23 +448,23 @@ object Play extends App {
 
       case 1 | 2 => //RedCar
         drawColorRect(col * 100, row * 100, 100, 100, Color.RED)
-      //fg.drawTransformedPicture(col*100+50,row*100+50,0,1,"/Mudry3.png")
+        //fg.drawTransformedPicture(col*100+50,row*100+50,0,1,"/Mudry3.png")
 
       case 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 => //Voitures Verticales taille 2
-        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE)
-      //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
+        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE.brighter())
+        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
 
       case 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 => //Voitures Verticales taille 3
-        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE)
-      //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
+        drawColorRect(col * 100, row * 100, 100, 100, Color.BLUE.darker())
+        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet3.png")
 
       case 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 => //Voitures Horizontales taille 2
-        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN)
-      //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet2_bis.png")
+        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN.brighter())
+        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet_bis.png")
 
       case 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 => //Voitures Horizontales taille 3
-        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN)
-      //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet2_bis.png")
+        drawColorRect(col * 100, row * 100, 100, 100, Color.GREEN.darker())
+        //fg.drawTransformedPicture(col*100+50,row*100+50,0,0.5,"/Jacquemet2_Black.png")
 
       case _ =>
         println("I don't know what's happening...")
@@ -489,40 +493,35 @@ object Play extends App {
     false
   }
   def checkGameFinished() : Boolean = {
-    if (currentLevel > finalLevel && finishedLevel) finishedGame = true
+    if (currentLevel == finalLevel && finishedLevel) finishedGame = true
     false
   }
 
   def buttonPressed():Unit = {
     if (pressedRight && keyHandled == false) {
-      println("Right pressed")
       offsetH += step * 100
       // Pile l'endroit pour changer l'état de la voiture
       keyHandled = true
       moveCar(selectedCar, 1, 0)
     }
     if (pressedLeft && keyHandled == false) {
-      println("Left pressed")
       offsetH -= step * 100 // Pile l'endroit pour changer l'état de la voiture
       keyHandled = true
       moveCar(selectedCar, -1, 0)
     }
     if (pressedUp && keyHandled == false) {
-      println("Up pressed")
       offsetV -= step * 100
       // Pile l'endroit pour changer l'état de la voiture
       keyHandled = true
       moveCar(selectedCar, 0, 1)
     }
     if (pressedDown && keyHandled == false) {
-      println("Down pressed")
       offsetV += step * 100
       // Pile l'endroit pour changer l'état de la voiture
       keyHandled = true
       moveCar(selectedCar, 0, -1)
     }
     if (pressedQ && keyHandled == false) {
-      println("Q pressed")
       quit = true
       // Pile l'endroit pour changer l'état de la voiture
       keyHandled = true
@@ -536,8 +535,10 @@ object Play extends App {
     fg.drawString(100, 200, s"Tu veux rejouer ?", Color.BLACK, 25)
     if (pressedY && !keyHandled) {
       println("Y pressed")
+      currentLevel = 0
+      finishedLevel = true
+      finishedGame = false
       play = true
-      currentLevel = 1
       keyHandled = true
       answeredReplay = true
     }
@@ -547,6 +548,7 @@ object Play extends App {
       keyHandled = true
       answeredReplay = true
     }
+    buttonPressed()
     //answeredReplay
   }
 }
