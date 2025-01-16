@@ -1,8 +1,11 @@
->![](/src/res/welcomeGame.png) Mot d'accueil du jeu
-> 
-**EXIT CAR**
+><img src="src/res/welcomeGame.png" width="400"/>
 
-**Description du jeu**
+>Mot d'accueil du jeu
+
+
+# **EXIT CAR**
+
+## **Description du jeu**
 
 **ExitCar** est un jeu de réflexion inspiré des classiques jeux de
 casse-tête basés sur les embouteillages (Rush Hour). L\'objectif est de
@@ -12,17 +15,19 @@ disposition unique, augmentant en complexité, et met à l\'épreuve les
 compétences de réflexion stratégique et de résolution de problèmes du
 joueur.
 
->![](/src/res/level1.png) Premier niveau
-> ![](/src/res/but.png) Réussite du niveau
-> 
 Le jeu utilise une grille pour représenter le parking, où les voitures sont
 positionnées horizontalement ou verticalement, avec des tailles variées.
 Le joueur contrôle les déplacements des voitures à l\'aide du clavier et
 doit planifier ses mouvements pour atteindre l\'objectif.
 
 
+><img src="src/res/level1.png" width="200"/> <img src="src/res/but.png" width="200"/>
 
-**Mode d\'emploi**
+>Début et réussite du niveau
+
+
+
+## **Mode d\'emploi**
 
 1.  **Objectif** : Déplacez la voiture rouge jusqu\'à la sortie indiquée
     sur la grille (Logo ISC).
@@ -45,7 +50,7 @@ doit planifier ses mouvements pour atteindre l\'objectif.
     Chaque niveau introduit de nouveaux défis nécessitant une
     planification stratégique.
 
-**Structure du code**
+## **Structure du code**
 
 Le code est organisé en plusieurs parties principales :
 
@@ -111,13 +116,13 @@ Le code est organisé en plusieurs parties principales :
     - À la fin du jeu, des messages et images appropriés sont affichés
       selon que le joueur décide de rejouer ou de quitter.
 
-**Evolutions possibles :**
+## **Evolutions possibles :**
 
 - **Plus de niveaux** : Le code est conçu pour ajouter facilement de
   nouveaux niveaux en définissant des configurations supplémentaires
   dans la fonction initLevel(). Et en augmentant la variable finalLevel.
 
-- **Personnaliser les voitures **: Comme pour la voiture rouge, il est
+- **Personnaliser les voitures**: Comme pour la voiture rouge, il est
   possible de rajouter des personnages dans le jeu pour le rendre plus
   divertissant. Il suffit pour cela de séparer les case dans l'affichage
   des voitures dans Draw.bigCars et de mettre une voiture différente
