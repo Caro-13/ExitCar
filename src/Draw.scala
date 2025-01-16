@@ -15,8 +15,8 @@ object Draw {
   val imgRedCarH : GraphicsBitmap = new GraphicsBitmap("/res/RedCarH_Mudry.png")
   val imgBusV: GraphicsBitmap = new GraphicsBitmap("/res/BusV.png")
   val imgBusH : GraphicsBitmap = new GraphicsBitmap("/res/BusH.png")
-  val imgGreenV : GraphicsBitmap = new GraphicsBitmap("/res/Car_GreenV.png")
-  val imgBlueH : GraphicsBitmap = new GraphicsBitmap("/res/Car_BlueH.png")
+  val imgGreenV : GraphicsBitmap = new GraphicsBitmap("/res/Car_PurpleV_X.png")
+  val imgBlueH : GraphicsBitmap = new GraphicsBitmap("/res/Car_yellowH.png")
 
   val imgWelcome : GraphicsBitmap = new GraphicsBitmap("/res/welcome.png")
   val imgYoupi : GraphicsBitmap = new GraphicsBitmap("/res/confettis.png")
